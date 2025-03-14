@@ -1,0 +1,7 @@
+- import: codeql-suites/javascript-lgtm-full.qls
+  from: codeql/javascript-queries
+- exclude: {}
+- include:
+    kind: path-problem
+    problem.severity: error
+    tags contain: security

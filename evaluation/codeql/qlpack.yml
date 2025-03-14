@@ -1,0 +1,7 @@
+name: debundle
+version: 0.0.0
+paths:
+  - node_modules
+  - .
+dependencies:
+codeql/javascript-all: "*"

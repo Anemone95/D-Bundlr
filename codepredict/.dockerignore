@@ -1,0 +1,8 @@
+/venv
+.vscode
+__pycache__
+saved_models_*.tgz
+*.log
+saved_models/
+old_models/
+.git

@@ -1,0 +1,49 @@
+{
+  "settings": {
+    "task_name": "bundle-codeql",
+    "db_uri": "sqlite:///$RESULTS_DIR/sqlite.db"
+  },
+  "sub_tasks": [
+    {
+      "name": "exec_command",
+      "command": "node $JELLY_PATH/main.js $TARGET --timeout 3600 --basedir $TARGET --debundle-dir $RESULT_DIR/code-pred --diagnostics-json diag-unpack-pred.json",
+      "log_file": "unpack-pred.log",
+      "timeout": 3700,
+      "env": {"NODE_OPTIONS": "--max-old-space-size=$MAX_MEMORY_MB"}
+    },
+    {
+      "name": "codeql",
+      "rules": "$BENCHMARK_DIR/codeql/querysuite.qls",
+      "output_label": "codeql-compile",
+      "source_root": "$RESULT_DIR/code-pred-raw",
+      "timeout": 1900
+    },
+    {
+      "name": "codeql",
+      "rules": "$BENCHMARK_DIR/codeql/querysuite.qls",
+      "output_label": "codeql-pred",
+      "source_root": "$RESULT_DIR/code-pred",
+      "timeout": 1900
+    },
+    {
+      "name": "exec_command",
+      "command": "node $JELLY_PATH/main.js $TARGET --timeout 3600 --no-predict --basedir $TARGET --debundle-dir $RESULT_DIR/code-base --diagnostics-json diag-unpack-base.json",
+      "log_file": "unpack-base.log",
+      "timeout": 3700,
+      "env": {"NODE_OPTIONS": "--max-old-space-size=$MAX_MEMORY_MB"}
+    },
+    {
+      "name": "codeql",
+      "rules": "$BENCHMARK_DIR/codeql/querysuite.qls",
+      "output_label": "codeql-base",
+      "source_root": "$RESULT_DIR/code-base",
+      "timeout": 1900
+    }
+  ],
+  "reporters": [
+    {
+      "name": "send_notification",
+      "attachments": ["$RESULTS_DIR/sqlite.db"]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+d-bundlr/.git
+d-bundlr/.vscode/
+codepredict/.git
+jelly-benchmarks/.git
+codepredict/saved_models.zip
+codepredict/dataset/full-dataset.tgz
+.idea
+.gittt
+codepredict/nodesource_setup.sh
+codeql/codeql-home/
+evaluation/dataset/
+evaluation/output.xlsx

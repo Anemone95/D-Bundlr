@@ -1,0 +1,17 @@
+name: ml
+channels:
+  - defaults
+  - pytorch
+dependencies:
+  - python=3.11
+  - pip
+  - pytorch
+  - torchvision
+  - torchaudio
+  - faiss-cpu
+  - pip:
+      - transformers==4.45.2
+      - sentencepiece
+      - tree-sitter==0.21.0
+      - flask
+      - gunicorn

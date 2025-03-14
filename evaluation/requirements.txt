@@ -1,0 +1,10 @@
+psutil==5.9.4
+fire==0.7.0
+matplotlib==3.9.1
+numpy
+sqlalchemy==2.0.38
+tqdm
+strsimpy
+--only-binary=scipy==1.12.0
+pandas
+openpyxl

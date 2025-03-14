@@ -1,0 +1,12 @@
+venv
+*.sw[pon]
+/packages
+/results
+__pycache__/
+node_modules/
+/out/
+/tmp/
+/coverage/
+/misc/fast/
+settings-local.py
+.idea

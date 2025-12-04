@@ -46,7 +46,7 @@ If you see an output similar to:
 [{"confidence":0.7002745270729065,"function":{"functionFile":"webpack/runtime/make namespace object","functionName":"__make_namespace_object__","packageName":"webpack-demo"}},{"confidence":0.5005811452865601,"function":{"functionFile":"lib/isTaxID.js","functionName":"_interopRequireWildcard","packageName":"validator"}},{"confidence":0.500332236289978,"function":{"functionFile":"browser/nunjucks.js","functionName":"gensym","packageName":"nunjucks"}}]
 ```
 
-then the predictor is running correctly.
+The predictor is running correctly.
 
 ### (Optional) Train a model yourself
 
@@ -60,7 +60,20 @@ tar -xf full-dataset.tgz -C dataset/full-dataset
 python3 ./train.py --data ./dataset/full-dataset
 ```
 
-## 2) Set up CodeQL
+## 2) Set up d-bundlr
+
+First install Node.js following <https://github.com/nodesource/distributions/blob/master/DEV_README.md>.
+
+Then build and link the tool:
+
+```bash
+cd d-bundlr
+npm install .
+npm run build
+npm link
+```
+
+## 3) (Optional) Set up CodeQL
 
 ```bash
 cd codeql
@@ -83,19 +96,6 @@ sed -i 's|com.semmle.js.extractor.AutoBuild|-javaagent:$CODE_QL_HOME/codeqlagent
 
 The last two lines hook the CodeQL file lookup to include every JavaScript file (incl. `node_modules`).
 
-## 3) Set up d-bundlr
-
-First install Node.js following <https://github.com/nodesource/distributions/blob/master/DEV_README.md>.
-
-Then build and link the tool:
-
-```bash
-cd d-bundlr
-npm install .
-npm run build
-npm link
-```
-
 # Usage
 
 > The following commands assume the current directory is `d-bundlr`.
@@ -104,14 +104,13 @@ npm link
 node ./lib/main.js <bundle> [--no-predict] \
   --basedir <base_dir> \
   --debundle-dir <output_dir> \
-  --diagnostics-json <diagnostics_json>
 ```
 
 **Options:**
-- `<bundle>`: The bundle script, or a directory containing the bundle.
-- `<base_dir>`: The project root. If `<bundle>` is a script, set this to the script’s directory; otherwise set it to the same path as `<bundle>`.
-- `<diagnostics_json>`: Path to the diagnostics output file.
-- `<output_dir>`: Directory to write the debundled scripts.
+- `<bundle>`: The bundle file that you want to analyze, or a directory containing all bundle files.
+- `<base_dir>`: If `<bundle>` is a script, set this to the script’s directory; otherwise, set it to the same path as `<bundle>`.
+- `<output_dir>`: Directory to output the debundled scripts.
+- `<diagnostics_json>`: (Optional)Path to the diagnostics output file.
 - `--no-predict`: (Optional) Disable prediction mode.
 
 For prediction mode, set the predictor endpoint (replace with the actual address if needed):
@@ -158,7 +157,7 @@ This takes ~2–3 minutes and ends with output similar to:
 
 Debundled scripts are in `./tmp/unpack`; the corresponding source files are in `./tmp/unpack-raw`.
 
-**Test what CodeQL sees in the bundle:**
+**Test what CodeQL sees in the bundle(Optional):**
 ```bash
 $CODE_QL_HOME/../codeqlscan.sh ./tmp/unpack-raw ./tmp/bundle.csv
 ```
@@ -193,6 +192,7 @@ $CODE_QL_HOME/../codeqlscan.sh ./tmp/unpack ./tmp/unpack.csv
 
 (The case study `www1.pluska.sk` is used in the experimental section.)
 ```bash
+cd d-bundlr
 node ./lib/main.js ./tests/www1.pluska.sk --no-predict \
   --basedir tests/www1.pluska.sk \
   --debundle-dir ./tmp/unpack2 \
@@ -201,7 +201,7 @@ node ./lib/main.js ./tests/www1.pluska.sk --no-predict \
 
 Debundled files are in `./tmp/unpack2`; the corresponding bundled files are in `./tmp/unpack2-raw`.
 
-Run CodeQL for both to compare:
+**Test what CodeQL sees in the bundle(Optional):**
 ```bash
 $CODE_QL_HOME/../codeqlscan.sh ./tmp/unpack2-raw ./tmp/bundle2.csv
 $CODE_QL_HOME/../codeqlscan.sh ./tmp/unpack2 ./tmp/unpack2.csv

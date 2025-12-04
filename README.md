@@ -104,6 +104,7 @@ The last two lines hook the CodeQL file lookup to include every JavaScript file 
 node ./lib/main.js <bundle> [--no-predict] \
   --basedir <base_dir> \
   --debundle-dir <output_dir> \
+  [--diagnostics-json <diagnosticsjson>]
 ```
 
 **Options:**
